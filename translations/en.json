@@ -1,0 +1,6 @@
+{
+  "config": {"step": {"user": {"title": "Smart House Scale", "description": "Connect a Xiaomi scale to Home Assistant native Bluetooth and the central API.", "data": {"device_name": "Scale name", "mac_address": "MAC address", "api_url": "Smart House API URL", "api_token": "Dedicated token (optional)", "session_window_seconds": "Session window (seconds)"}}}},
+  "options": {"step": {"init": {"title": "Smart House Scale options", "data": {"api_url": "Smart House API URL", "api_token": "Dedicated token (optional)", "session_window_seconds": "Session window (seconds)"}}}},
+  "title": "Smart House Scale",
+  "error": {"invalid_mac": "Enter a valid Bluetooth MAC address."}
+}
