@@ -1,6 +1,0 @@
-{
-  "config": {"step": {"user": {"title": "Smart House Scale", "description": "Conecte a balança Xiaomi ao Bluetooth nativo do Home Assistant e à API central.", "data": {"device_name": "Nome da balança", "mac_address": "Endereço MAC", "api_url": "URL da API Smart House", "api_token": "Token dedicado (opcional)", "session_window_seconds": "Janela da sessão (segundos)"}}}},
-  "options": {"step": {"init": {"title": "Opções Smart House Scale", "data": {"api_url": "URL da API Smart House", "api_token": "Token dedicado (opcional)", "session_window_seconds": "Janela da sessão (segundos)"}}}},
-  "title": "Smart House Scale",
-  "error": {"invalid_mac": "Informe um endereço MAC Bluetooth válido."}
-}

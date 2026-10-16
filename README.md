@@ -1,19 +1,24 @@
-# Smart House Scale — Home Assistant Integration
+# Smart House Scale — integração HACS descontinuada
 
-Native Home Assistant integration for the Smart House Scale project.
+Este repositório foi descontinuado na versão 0.5.0.
 
-It uses Home Assistant's Bluetooth stack (including Bluetooth Proxy), waits for
-stabilized Xiaomi scale readings, deduplicates advertisements, and sends
-measurements to the central Smart House API using the configured Bearer token.
+O projeto deixou de manter um componente customizado/HACS. A instalação oficial
+agora é somente o App **Smart House Scale**:
 
-Install through HACS as a custom integration, then add **Smart House Scale** in
-Home Assistant and configure the scale MAC address, API URL, token, and session
-window.
-
-Releases include the `smart_house_scale.zip` asset expected by HACS. After an
-update, restart Home Assistant Core so the new integration code is loaded.
-
-The dashboard App is published separately at:
 https://github.com/aoliveira07/smart-house-scale
+
+O App escuta uma entidade de peso publicada pelo Home Assistant. A integração
+nativa do Home Assistant continua responsável pelo Bluetooth e pela
+descriptografia Xiaomi; não instale este repositório em novas casas.
+
+Para atualizar uma instalação antiga:
+
+1. atualize o App Smart House Scale para `0.5.0` ou posterior;
+2. configure, na aba **Configuração**, a entidade de peso do Home Assistant;
+3. confirme uma pesagem e a fila antes de remover a integração antiga;
+4. remova **Smart House Scale** em HACS e exclua a entrada antiga em
+   **Configurações → Dispositivos e serviços**, se ela ainda aparecer.
+
+O histórico central no PostgreSQL não é removido por essa desinstalação.
 
 License: MIT.
