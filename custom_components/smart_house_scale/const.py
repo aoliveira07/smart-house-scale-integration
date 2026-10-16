@@ -4,7 +4,7 @@ from __future__ import annotations
 
 DOMAIN = "smart_house_scale"
 NAME = "Smart House Scale"
-VERSION = "0.1.3"
+VERSION = "0.1.7"
 
 CONF_API_URL = "api_url"
 CONF_API_TOKEN = "api_token"

@@ -77,7 +77,7 @@ class ScaleDeviceSensor(RuntimeEntity):
         if self.key == "last_measurement":
             return (self.runtime.last_measurement or {}).get("weight_kg")
         if self.key == "last_seen":
-            return self.runtime.api.last_attempt
+            return self.runtime.last_ble_seen_at or self.runtime.api.last_attempt
         return self.runtime.pending_count
 
     @property

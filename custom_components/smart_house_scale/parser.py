@@ -137,3 +137,75 @@ def parse_service_info(service_info: Any, *, expected_mac: str | None = None) ->
         rssi=int(rssi) if rssi is not None else None,
         raw_payload={"service_uuid": selected, "payload_hex": payload.hex()},
     )
+
+
+def parse_native_entity_state(
+    state: Any,
+    *,
+    mac_address: str,
+    entity_id: str,
+    model: str | None = None,
+) -> ParsedMeasurement | None:
+    """Convert a native Home Assistant Xiaomi BLE weight state to a reading.
+
+    Newer Xiaomi scales such as the S200 use encrypted MiBeacon (FE95).
+    The native ``xiaomi_ble`` integration already owns the bind key and
+    decryption, so this integration consumes its weight entity instead of
+    duplicating credentials or opening another Bluetooth scanner.
+    """
+
+    if isinstance(state, Mapping):
+        value = state.get("state")
+        attributes = state.get("attributes") or {}
+        measured_at = state.get("last_changed") or state.get("last_updated")
+    else:
+        value = getattr(state, "state", None)
+        attributes = getattr(state, "attributes", {}) or {}
+        measured_at = getattr(state, "last_changed", None) or getattr(state, "last_updated", None)
+    if value is None or str(value).strip().lower() in {"unknown", "unavailable", "none", ""}:
+        return None
+    try:
+        native_weight = float(str(value).strip().replace(",", "."))
+    except (TypeError, ValueError):
+        return None
+
+    native_unit = str(attributes.get("unit_of_measurement") or "kg").strip().lower()
+    if native_unit in {"lb", "lbs", "pound", "pounds"}:
+        original_unit = "lbs"
+        weight_kg = native_weight * 0.45359237
+    elif native_unit in {"jin", "市斤"}:
+        original_unit = "jin"
+        weight_kg = native_weight * 0.5
+    else:
+        original_unit = "kg"
+        weight_kg = native_weight
+    if not 5 <= weight_kg <= 300:
+        return None
+    if not isinstance(measured_at, datetime):
+        measured_at = datetime.now(UTC)
+    elif measured_at.tzinfo is None:
+        measured_at = measured_at.replace(tzinfo=UTC)
+    else:
+        measured_at = measured_at.astimezone(UTC)
+    rssi_value = attributes.get("rssi", attributes.get("signal_strength"))
+    try:
+        rssi = int(rssi_value) if rssi_value is not None else None
+    except (TypeError, ValueError):
+        rssi = None
+    return ParsedMeasurement(
+        weight_kg=round(weight_kg, 3),
+        original_unit=original_unit,
+        measured_at=measured_at,
+        stable=True,
+        impedance=None,
+        protocol="xiaomi_ble_native",
+        model=model,
+        mac_address=normalize_mac(mac_address),
+        rssi=rssi,
+        raw_payload={
+            "source": "home_assistant_xiaomi_ble",
+            "entity_id": entity_id,
+            "state": str(value),
+            "unit_of_measurement": native_unit,
+        },
+    )
