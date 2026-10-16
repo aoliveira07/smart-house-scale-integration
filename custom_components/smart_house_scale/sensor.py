@@ -32,7 +32,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     known_user_ids = {str(user["id"]) for user in users}
 
     @callback
-    def _async_new_data() -> None:
+    def _async_new_data(*_args: Any) -> None:
         additions: list[SensorEntity] = []
         for user_id, user in runtime.user_summaries.items():
             if user_id not in known_user_ids:
